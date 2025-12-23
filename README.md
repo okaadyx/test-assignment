@@ -27,6 +27,8 @@ The app fetches product data from the [DummyJSON API](https://dummyjson.com) to 
 
 ## How to Run the Project
 
+**APK build:** [Download here](https://drive.google.com/file/d/1Ye5HDFdSKE1-v81v5xsaQD9lh6WCqmeu/view?usp=sharing)
+
 ### Prerequisites
 
 Before running the project, ensure you have the following installed:
