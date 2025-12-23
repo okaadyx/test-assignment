@@ -3,15 +3,15 @@ import {
   Text,
   FlatList,
   Image,
-  StyleSheet,
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Product } from '../../services/products/types';
+import { searchListComponentStyles as styles } from '../styles/searchListComponentStyles';
 
-export function ProductListComponent({ products }: { products: Product[] }) {
+export function SearchListComponent({ products }: { products: Product[] }) {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
 
@@ -58,41 +58,3 @@ export function ProductListComponent({ products }: { products: Product[] }) {
     />
   );
 }
-
-const styles = StyleSheet.create({
-  listContent: {
-    paddingHorizontal: 8,
-  },
-  columnWrapper: {
-    justifyContent: 'space-between',
-  },
-  card: {
-    flex: 1,
-    margin: 8,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 8,
-    elevation: 3,
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    borderRadius: 6,
-  },
-  title: {
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  price: {
-    marginTop: 4,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#E53935',
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

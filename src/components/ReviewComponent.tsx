@@ -1,6 +1,7 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 import React from 'react';
 import { Review } from '../../services/products/types';
+import { reviewComponentStyles as styles } from '../styles/reviewComponentStyles';
 
 export function ReviewComponent({ reviews }: { reviews: Review[] }) {
   if (reviews.length === 0) {
@@ -30,33 +31,3 @@ export function ReviewComponent({ reviews }: { reviews: Review[] }) {
 }
 
 export default ReviewComponent;
-
-const styles = StyleSheet.create({
-  reviewCard: {
-    backgroundColor: '#fafafa',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  reviewName: {
-    fontWeight: '600',
-    fontSize: 14,
-  },
-  noReviews: {
-    color: '#888',
-    fontSize: 14,
-  },
-  noReviewContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  reviewRating: {
-    fontSize: 14,
-    marginVertical: 2,
-  },
-  reviewComment: {
-    fontSize: 13,
-    color: '#555',
-  },
-});

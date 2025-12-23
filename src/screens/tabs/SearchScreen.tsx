@@ -1,10 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
-import { CategoryComponent, ProductListComponent } from '../../components';
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { CategoryComponent, ProductCard } from '../../components';
 import { Product, Category } from '../../../services/products/types';
 import { api } from '../../../services';
+import { searchScreenStyles as styles } from '../../styles/searchScreenStyles';
 
 export function SearchScreen() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -13,7 +23,12 @@ export function SearchScreen() {
   const [isSearch, setIsSearch] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [limit] = useState(20);
 
+  const navigation = useNavigation<any>();
+  const insets = useSafeAreaInsets();
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -29,23 +44,58 @@ export function SearchScreen() {
     fetchCategories();
   }, []);
 
-  const handleSearch = async () => {
-    if (!searchText.trim()) {
+  const loadSearchResults = async (initial = false) => {
+    const query = searchText.trim();
+
+    if (!query) {
       setIsSearch(false);
       setData([]);
+      setTotal(0);
       return;
     }
 
-    try {
+    if (initial) {
       setSearchLoading(true);
-      const response = await api.products.search(searchText);
-      setData(response);
+    } else {
+      setLoadingMore(true);
+    }
+
+    try {
+      const response = await api.products.search(query, {
+        limit,
+        skip: initial ? 0 : data.length,
+      });
+
+      setData(prev =>
+        initial ? response.products : [...prev, ...response.products],
+      );
+      setTotal(response.total);
       setIsSearch(true);
     } catch (error: any) {
       console.log(error.message);
     } finally {
-      setSearchLoading(false);
+      if (initial) {
+        setSearchLoading(false);
+      } else {
+        setLoadingMore(false);
+      }
     }
+  };
+
+  const handleSearch = async () => {
+    loadSearchResults(true);
+  };
+
+  const handleEndReached = () => {
+    if (!isSearch || searchLoading || loadingMore) {
+      return;
+    }
+
+    if (data.length >= total && total !== 0) {
+      return;
+    }
+
+    loadSearchResults(false);
   };
 
   useFocusEffect(
@@ -54,6 +104,7 @@ export function SearchScreen() {
         setSearchText('');
         setData([]);
         setIsSearch(false);
+        setTotal(0);
       };
     }, []),
   );
@@ -93,39 +144,35 @@ export function SearchScreen() {
       ) : !isSearch ? (
         <CategoryComponent categories={categories} />
       ) : (
-        <ProductListComponent products={data} />
+        <FlatList
+          data={data}
+          keyExtractor={item => String(item.id)}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[
+            styles.listContent,
+            { paddingBottom: insets.bottom + 80 },
+          ]}
+          columnWrapperStyle={styles.columnWrapper}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.4}
+          ListFooterComponent={
+            loadingMore ? (
+              <ActivityIndicator style={styles.footerLoader} size="small" />
+            ) : null
+          }
+          renderItem={({ item }) => (
+            <ProductCard
+              product={item}
+              onPress={() =>
+                navigation.navigate('Details', {
+                  productId: item.id,
+                })
+              }
+            />
+          )}
+        />
       )}
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  searchContainer: {
-    height: 40,
-    margin: 12,
-    paddingHorizontal: 10,
-    borderRadius: 12,
-    backgroundColor: 'white',
-    flexDirection: 'row',
-    alignItems: 'center',
-    elevation: 2,
-  },
-  input: {
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 16,
-    color: 'black',
-  },
-  initialLoading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  searchingText: {
-    textAlign: 'center',
-    marginTop: 20,
-    fontSize: 16,
-    color: 'gray',
-  },
-});

@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
+import { View, Text, FlatList, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Category } from '../../services/products/types';
+import { categoryComponentStyles as styles } from '../styles/categoryComponentStyles';
 
 export function CategoryComponent({ categories }: { categories: Category[] }) {
   const navigation = useNavigation<any>();
@@ -32,23 +33,3 @@ export function CategoryComponent({ categories }: { categories: Category[] }) {
     </View>
   );
 }
-const styles = StyleSheet.create({
-  list: {
-    padding: 8,
-    alignItems: 'center',
-  },
-  card: {
-    width: 180,
-    height: 100,
-    backgroundColor: 'red',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 6,
-  },
-  cardText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});

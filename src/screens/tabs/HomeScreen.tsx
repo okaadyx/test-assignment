@@ -2,16 +2,15 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
-  TouchableOpacity,
-  Image,
   ActivityIndicator,
 } from 'react-native';
 import { api } from '../../../services';
 import { Product } from '../../../services/products/types';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { ProductCard } from '../../components';
+import { homeScreenStyles as styles } from '../../styles/homeScreenStyles';
 
 export function HomeScreen() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -63,6 +62,7 @@ export function HomeScreen() {
   };
   useEffect(() => {
     loadProducts(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
@@ -101,77 +101,16 @@ export function HomeScreen() {
           ) : null
         }
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            activeOpacity={0.8}
+          <ProductCard
+            product={item}
             onPress={() =>
               navigation.navigate('Details', {
                 productId: item.id,
               })
             }
-          >
-            <Image
-              source={{ uri: item.images?.[0] }}
-              style={styles.image}
-              resizeMode="cover"
-            />
-            <Text numberOfLines={2} style={styles.title}>
-              {item.title}
-            </Text>
-            <Text style={styles.price}>₹{item.price}</Text>
-          </TouchableOpacity>
+          />
         )}
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-  },
-  loading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  listContent: {
-    paddingHorizontal: 8,
-  },
-  columnWrapper: {
-    justifyContent: 'space-between',
-  },
-  card: {
-    flex: 1,
-    margin: 8,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 8,
-    elevation: 3,
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    borderRadius: 6,
-  },
-  title: {
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  price: {
-    marginTop: 4,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#E53935',
-  },
-  footerLoader: {
-    marginVertical: 16,
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

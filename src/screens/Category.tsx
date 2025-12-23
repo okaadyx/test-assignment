@@ -2,16 +2,15 @@ import { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
-  TouchableOpacity,
-  Image,
   ActivityIndicator,
 } from 'react-native';
 import { api } from '../../services';
 import { Product, Category } from '../../services/products/types';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProductCard } from '../components';
+import { categoryScreenStyles as styles } from '../styles/categoryScreenStyles';
 
 export function CategoryScreen({ route }: any) {
   const category: Category | undefined = route.params?.category;
@@ -121,76 +120,16 @@ export function CategoryScreen({ route }: any) {
           ) : null
         }
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            activeOpacity={0.8}
+          <ProductCard
+            product={item}
             onPress={() =>
               navigation.navigate('Details', {
                 productId: item.id,
               })
             }
-          >
-            <Image
-              source={{ uri: item.images?.[0] }}
-              style={styles.image}
-              resizeMode="cover"
-            />
-            <Text numberOfLines={2} style={styles.title}>
-              {item.title}
-            </Text>
-            <Text style={styles.price}>₹{item.price}</Text>
-          </TouchableOpacity>
+          />
         )}
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  loading: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  listContent: {
-    paddingHorizontal: 8,
-  },
-  columnWrapper: {
-    justifyContent: 'space-between',
-  },
-  card: {
-    flex: 1,
-    margin: 8,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 8,
-    elevation: 3,
-  },
-  image: {
-    width: '100%',
-    height: 150,
-    borderRadius: 6,
-  },
-  title: {
-    marginTop: 8,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  price: {
-    marginTop: 4,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#E53935',
-  },
-  footerLoader: {
-    marginVertical: 16,
-  },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

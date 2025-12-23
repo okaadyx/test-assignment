@@ -25,11 +25,17 @@ export class ProductsApi {
     const { data } = await this.client.get('/products/categories');
     return data;
   }
-  async search(searchQuery: string) {
+  async search(
+    searchQuery: string,
+    params?: { limit?: number; skip?: number },
+  ) {
     const { data } = await this.client.get<SearchResponse>(
-      `/products/search?q=${searchQuery}`,
+      `/products/search`,
+      {
+        params: { q: searchQuery, ...params },
+      },
     );
-    return data.products;
+    return data;
   }
   async fetchByCategory(
     slug: string,
