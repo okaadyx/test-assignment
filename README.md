@@ -59,7 +59,7 @@ Before running the project, ensure you have the following installed:
 cd testing
 ```
 
-2. **Install JavaScript dependencies:**
+2. **Install dependencies:**
 ```sh
 npm install
 # OR
@@ -77,9 +77,9 @@ cd ..
 
 ### Running the App
 
-#### Step 1: Start Metro Bundler
+#### Run on Android
 
-Metro is the JavaScript bundler for React Native. Start it in a terminal:
+1) Start Metro (bundler):
 
 ```sh
 npm start
@@ -89,37 +89,27 @@ yarn start
 npx react-native start
 ```
 
-This will start the Metro bundler. Keep this terminal window open.
+Keep this terminal open.
 
-#### Step 2: Run on Android
-
-Open a **new terminal window** and run:
+2) In a new terminal, run:
 
 ```sh
 npx react-native run-android
 ```
 
-This will:
-- Build the Android app
-- Launch the Android Emulator (if configured) or install on a connected device
-- Connect to the Metro bundler automatically
+This will build the Android app, launch the emulator (if configured) or install on a connected device, and connect to Metro automatically.
 
-**Note:** Make sure you have an Android emulator running or a device connected via USB with USB debugging enabled.
+**Note:** Ensure an emulator is running or a USB device with debugging enabled is connected.
 
-#### Step 3: Run on iOS (macOS only)
+#### Run on iOS (macOS only)
 
-Open a **new terminal window** and run:
+1) Start Metro (bundler) as above, then in a new terminal run:
 
 ```sh
 npx react-native run-ios
 ```
 
-This will:
-- Build the iOS app
-- Launch the iOS Simulator
-- Connect to the Metro bundler automatically
-
-**Note:** For the first run, this may take several minutes as Xcode builds the app.
+This will build the iOS app, launch the iOS Simulator, and connect to Metro automatically. The first run may take several minutes as Xcode builds the app.
 
 ### Development Tips
 
